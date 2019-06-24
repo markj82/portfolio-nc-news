@@ -127,6 +127,30 @@ describe('formatDate', () => {
     })
 });
 
-describe('makeRefObj', () => {});
+describe('makeRefObj', () => {
+    it('returns single object when array with key values pairs is passed', () => {
+        const input = [{ article_id: 1, title: 'A' }];
+        const expected = { A: 1 }
+        const actual = makeRefObj(input);
+        expect(actual).to.eql(expected)
+    });
+    it('returns another single object when array with key values pairs is passed', () => {
+        const input = [
+            { article_id : 2, title: 'Hello'}
+        ];
+        const expected = { Hello: 2 };
+        const actual = makeRefObj(input);
+        expect(actual).to.eql(expected)
+    });
+    it('returs object with multiply key value pairs when array with multiple objects is passed', () => {
+        const input = [
+            { article_id: 1, title: 'A' },
+            { article_id : 2, title: 'Hello'}
+        ];
+        const expected = { A : 1, Hello : 2};
+        const actual = makeRefObj(input);
+        expect(actual).to.eql(expected);
+    })
+});
 
 describe('formatComments', () => {});

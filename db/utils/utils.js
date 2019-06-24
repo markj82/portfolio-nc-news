@@ -8,7 +8,11 @@ exports.formatDate = list => {
 };
 
 exports.makeRefObj = list => {
-    
+    const refObj = {};
+    list.forEach(item => {
+        refObj[item.title] = item.article_id
+    })
+    return refObj;
 };
 
 exports.formatComments = (comments, articleRef) => {};
