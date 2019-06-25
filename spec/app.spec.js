@@ -45,5 +45,12 @@ describe('/', () => {
                     })
             })
         })
+        describe('GET /articles', () => {
+            it('GET: status 200, should return an object based on article id', () => {
+                return request(app)
+                    .get('/api/articles/2')
+                    .expect(200)
+            })
+        })
     })
 })
