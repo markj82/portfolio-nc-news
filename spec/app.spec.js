@@ -9,7 +9,7 @@ describe('/', () => {
     after(() => connection.destroy())
     beforeEach(() => connection.seed.run())
 
-    describe('/topics', () => {
+    describe('/api', () => {
         describe('GET /topics', () => {
             it('GET: status 200, should return array of topics objects', () => {
                 return request(app)
@@ -19,6 +19,11 @@ describe('/', () => {
                         expect(res.body.topics).to.be.an('array');
                         expect(res.body.topics[0]).to.contain.keys('slug', 'description')
                     })
+            });
+            it('GET: status 404, invalid route', () => {
+                return request(app)
+                    .get('/api/topics/wrong-address')
+                    .expect(404)
             })
         })
         describe('GET /users', () => {
@@ -29,6 +34,14 @@ describe('/', () => {
                     .then(res => {
                         expect(res.body.user).to.be.an('object')
                         expect(res.body.user).to.contain.keys('username', 'avatar_url', 'name');
+                    })
+            });
+            it('GET: status 404, invalid username, ?or 400 bad request?', () => {
+                return request(app)
+                    .get('/api/users/wrong-username')
+                    .expect(404)
+                    .then(res => {
+                        expect(res.body.msg).to.equal('User not found');
                     })
             })
         })
