@@ -6,7 +6,7 @@ exports.up = function(connection, Promise) {
       commentsTable.integer('article_id').references('articles.article_id');
       commentsTable.integer('votes'); // set to 0 ?
       commentsTable.string('created_at');
-      commentsTable.string('body')
+      commentsTable.text('body')
   })
 };
 
