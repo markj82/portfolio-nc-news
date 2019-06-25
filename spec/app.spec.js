@@ -16,9 +16,19 @@ describe('/', () => {
                     .get('/api/topics')
                     .expect(200)
                     .then(res => {
-                        console.log(res.body.topics)
                         expect(res.body.topics).to.be.an('array');
                         expect(res.body.topics[0]).to.contain.keys('slug', 'description')
+                    })
+            })
+        })
+        describe('GET /users', () => {
+            it('GET: status 200, should return an object based on passed username', () => {
+                return request(app)
+                    .get('/api/users/rogersop')
+                    .expect(200)
+                    .then(res => {
+                        expect(res.body.user).to.be.an('object')
+                        expect(res.body.user).to.contain.keys('username', 'avatar_url', 'name');
                     })
             })
         })
