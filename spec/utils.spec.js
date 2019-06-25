@@ -1,13 +1,6 @@
 const { expect } = require('chai');
 const { formatDate, makeRefObj, formatComments } = require('../db/utils/utils');
 
-/*
-This utility function should be able to take an array (`list`) of objects and return a new array. Each item in the new array must have its timestamp converted into a Javascript date object. Everything else in each item must be maintained.
-
-_hint: Think carefully about how you can test that this has worked - it's not by copying and pasting a sql timestamp from the terminal into your test_
-*/
-
-
 describe('formatDate', () => {
     it('returns an array', () => {
         const input = [{}];
@@ -153,4 +146,57 @@ describe('makeRefObj', () => {
     })
 });
 
-describe('formatComments', () => {});
+describe('formatComments', () => {
+    it('returns array with one object, when array wiht one object is passed - created by renamed to author, belongs_to renamed to article_id', () => {
+        const comments = [{
+            body: 'Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.',
+            belongs_to: 'The People Tracking Every Touch, Pass And Tackle in the World Cup',
+            created_by: 'tickle122',
+            votes: -1,
+            created_at: 1468087638932,
+          }];
+        const articleRef = { 'The People Tracking Every Touch, Pass And Tackle in the World Cup': 1};
+        const actual = formatComments(comments, articleRef);
+        const expected = [{
+            body: 'Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.',
+            article_id: 1,
+            author: 'tickle122',
+            votes: -1,
+            created_at: "7/9/2016, 7:07:18 PM",
+          }];
+        expect(actual).to.eql(expected)
+    })
+    it('returns array with multiply object with changed key value pairs, when array with multiply objects is passed', () => {
+        const comments = [{
+            body: 'Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.',
+            belongs_to: 'The People Tracking Every Touch, Pass And Tackle in the World Cup',
+            created_by: 'tickle122',
+            votes: -1,
+            created_at: 1468087638932,
+          },
+          {
+            body: 'Nobis consequatur animi. Ullam nobis quaerat voluptates veniam.',
+            belongs_to: 'Making sense of Redux',
+            created_by: 'grumpy19',
+            votes: 7,
+            created_at: 1478813209256,
+          }];
+          const articleRef = {'The People Tracking Every Touch, Pass And Tackle in the World Cup': 1, 'Making sense of Redux' : 2};
+          const actual = formatComments(comments, articleRef);
+          const expected = [{
+            body: 'Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.',
+            article_id: 1,
+            author: 'tickle122',
+            votes: -1,
+            created_at: "7/9/2016, 7:07:18 PM",
+          },
+          {
+            body: 'Nobis consequatur animi. Ullam nobis quaerat voluptates veniam.',
+            article_id: 2,
+            author: 'grumpy19',
+            votes: 7,
+            created_at: "11/10/2016, 9:26:49 PM",
+          }];
+          expect(actual).to.eql(expected)
+    })
+});

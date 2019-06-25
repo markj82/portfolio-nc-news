@@ -15,10 +15,13 @@ exports.makeRefObj = list => {
     return refObj;
 };
 
-exports.formatComments = (comments, articleRef) => {};
-
-
-
-// const newDate = new Date(1478813209256).toLocaleString()
-// console.log(newDate)
-//8/18/2016, 1:07:52 PM
+exports.formatComments = (comments, articleRef) => {
+    return comments.map(comment => {
+        let {created_by, belongs_to, created_at, ...restOfData} = comment;
+        const author = created_by
+        const article_id = articleRef[belongs_to];
+        const newDate = new Date(created_at).toLocaleString()
+        created_at = newDate
+        return {author, created_at, article_id, ...restOfData};
+    })
+};
