@@ -18,6 +18,11 @@ exports.fetchArticle = article_id => {
         })
     }
 
-exports.editArticle = () => {
-    
+exports.editArticle = (article_id, increment) => {
+    return connection
+        .first('*')
+        .from('articles')
+        .where("articles.article_id", article_id)
+        .increment("votes", increment)
+        .returning('*')
 }

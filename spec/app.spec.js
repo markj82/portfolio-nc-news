@@ -72,8 +72,13 @@ describe('/', () => {
         describe('PATCH /articles', () => {
             it('PATCH: status 201, respond with updated article', () => {
                 return request(app)
-                    .patch('/api/articles/3')
+                    .patch('/api/articles/5')
+                    .send({ inc_votes: 35})
                     .expect(201)
+                    .then(res => {
+                        // console.log(res.body.article, '<< res.body from test')
+                        expect(res.body.article.votes).to.equal(35);
+                    })
             })
         })
     })
