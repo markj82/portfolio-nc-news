@@ -48,8 +48,12 @@ describe('/', () => {
         describe('GET /articles', () => {
             it('GET: status 200, should return an object based on article id', () => {
                 return request(app)
-                    .get('/api/articles/2')
+                    .get('/api/articles/1')
                     .expect(200)
+                    .then(res => {
+                        expect(res.body.article).to.be.an('object')
+                        expect(res.body.article).to.contain.keys('article_id', 'title', 'body', 'votes', 'topic', 'author', 'created_at', 'comment_count')
+                    })
             })
         })
     })
