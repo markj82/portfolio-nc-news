@@ -7,8 +7,13 @@ app.use(express.json());
 app.use('/api', apiRouter);
 
 app.use((err, req, res, next) => {
+    const sqlErrorCodes = {
+        '22P02': 'Invalid article id'
+    };
+    if(sqlErrorCodes.hasOwnProperty(err.code)) {
+        res.status(400).send({ msg: sqlErrorCodes[err.code]})
+    }
     res.status(404).send({msg : "User not found"})
 })
-
 
 module.exports = app;

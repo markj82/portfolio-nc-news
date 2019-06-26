@@ -60,6 +60,14 @@ describe('/', () => {
                     .get('/api/articles/99999')
                     .expect(404)
             });
+            it('GET status 400 - bad request, when passing invalid id, ie string', () => {
+                return request(app)
+                    .get('/api/articles/not-a-valid-id')
+                    .expect(400)
+                    .then(({body}) => {
+                        expect(body.msg).to.equal('Invalid article id')
+                    })
+            })
         })
     })
 })
