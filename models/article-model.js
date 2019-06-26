@@ -50,3 +50,9 @@ exports.addCommentToArticle = (article_id, username, commentBody) => {
             return comment[0]
         })
 }
+
+exports.fetchComment = () => {
+    return connection
+        .select('*')
+        .from('comments')
+}
