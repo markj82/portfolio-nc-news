@@ -85,6 +85,15 @@ describe('/', () => {
                     .send({ inc_votes: 40})
                     .expect(404)  
             });
+            it('PATCH: status 400, invalid type of article id, i.e string', () => {
+                return request(app)
+                    .patch('/api/articles/not-a-valid-id')
+                    .send({ inc_votes: 35})
+                    .expect(400)
+                    .then(({body}) => {
+                        expect(body.msg).to.equal('Invalid article id')
+                    })
+            })
         })
     })
 })
