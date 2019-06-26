@@ -68,6 +68,13 @@ describe('/', () => {
                         expect(body.msg).to.equal('Invalid article id')
                     })
             })
+        });
+        describe('PATCH /articles', () => {
+            it('PATCH: status 201, respond with updated article', () => {
+                return request(app)
+                    .patch('/api/articles/3')
+                    .expect(201)
+            })
         })
     })
 })

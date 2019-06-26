@@ -17,3 +17,7 @@ exports.fetchArticle = article_id => {
             } else return article
         })
     }
+
+exports.editArticle = () => {
+    
+}
