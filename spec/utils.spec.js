@@ -29,7 +29,8 @@ describe('formatDate', () => {
             }
         ];
         const actual = formatDate(input);
-        expect(actual).to.eql(expected);
+        expect(actual[0].title).to.equal('Running a Node App');
+        expect(actual[0].created_at.toLocaleString()).to.equal("8/18/2016, 1:07:52 PM")
     });
     it('return array with multiply objects of ARTICLES with key values unchanged, while created_at was changed to readable format', () => {
         const input = [
