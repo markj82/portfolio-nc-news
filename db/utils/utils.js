@@ -20,7 +20,7 @@ exports.formatComments = (comments, articleRef) => {
         let {created_by, belongs_to, created_at, ...restOfData} = comment;
         const author = created_by
         const article_id = articleRef[belongs_to];
-        const newDate = new Date(created_at).toLocaleString()
+        const newDate = new Date(created_at)
         created_at = newDate
         return {author, created_at, article_id, ...restOfData};
     })
