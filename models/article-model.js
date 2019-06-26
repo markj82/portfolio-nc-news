@@ -9,6 +9,11 @@ exports.fetchArticle = article_id => {
         .groupBy("articles.article_id")
         .where("articles.article_id", article_id)
         .then(article => {
-            return article
+            if(!article) {
+                return Promise.reject({
+                    status: 404,
+                    msg: "Article not found"
+                })
+            } else return article
         })
     }

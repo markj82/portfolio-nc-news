@@ -54,7 +54,12 @@ describe('/', () => {
                         expect(res.body.article).to.be.an('object')
                         expect(res.body.article).to.contain.keys('article_id', 'title', 'body', 'votes', 'topic', 'author', 'created_at', 'comment_count')
                     })
-            })
+            });
+            it('GET status 404, when passing valid id, which is NOT in the database', () => {
+                return request(app)
+                    .get('/api/articles/99999')
+                    .expect(404)
+            });
         })
     })
 })
