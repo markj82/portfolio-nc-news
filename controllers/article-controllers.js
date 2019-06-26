@@ -1,4 +1,4 @@
-const { fetchArticle, editArticle } = require('../models/article-model')
+const { fetchArticle, editArticle, addCommentToArticle } = require('../models/article-model')
 
 exports.sendArticle = (req, res, next) => {
     const article_id = req.params.article_id
@@ -13,4 +13,13 @@ exports.amendArticle = (req, res, next) => {
     editArticle(article_id, increment).then(([article]) => {
         res.status(201).send({article})
     }).catch(next)
+}
+
+exports.addComment = (req, res, next) => {
+    const article_id = req.params.article_id
+    const username = req.body.username
+    const commentBody = req.body.body
+    addCommentToArticle(article_id, username, commentBody).then(comment => {
+        res.status(201).send({comment})
+    })
 }

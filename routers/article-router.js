@@ -1,5 +1,5 @@
 const articleRouter = require('express').Router();
-const { sendArticle, amendArticle } = require('../controllers/article-controllers');
+const { sendArticle, amendArticle, addComment } = require('../controllers/article-controllers');
 
 articleRouter.route('/').get(sendArticle)
 
@@ -7,5 +7,7 @@ articleRouter
     .route('/:article_id')
     .get(sendArticle)
     .patch(amendArticle)
+
+articleRouter.route('/:article_id/comments').post(addComment)
 
 module.exports = articleRouter;

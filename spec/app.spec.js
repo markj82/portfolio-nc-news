@@ -95,5 +95,22 @@ describe('/', () => {
                     })
             })
         })
+        describe('POST /articles', () => {
+            it('POST: status 201, responds with posted comment', () => {
+                return request(app)
+                    .post('/api/articles/4/comments')
+                    .send({
+                        username: 'butter_bridge',
+                        body: 'This is really nice comment LOL'
+                    })
+                    .expect(201)
+                    .then(({body}) => {
+                        expect(body.comment).to.be.an('object');
+                        expect(body.comment).to.contain.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body');
+                        expect(body.comment.author).to.equal('butter_bridge')
+                        expect(body.comment.body).to.equal('This is really nice comment LOL')
+                    })
+            })
+        })
     })
 })

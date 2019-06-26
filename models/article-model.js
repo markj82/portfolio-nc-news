@@ -34,3 +34,19 @@ exports.editArticle = (article_id, increment) => {
             } else return article
         })
 }
+
+exports.addCommentToArticle = (article_id, username, commentBody) => {
+    const commentToInsert = {
+        article_id: article_id,
+        author: username,
+        body: commentBody
+    }
+
+    return connection
+        .from('comments')
+        .insert(commentToInsert)
+        .returning('*')
+        .then(comment => {
+            return comment[0]
+        })
+}
