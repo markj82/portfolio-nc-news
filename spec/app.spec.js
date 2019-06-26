@@ -76,10 +76,15 @@ describe('/', () => {
                     .send({ inc_votes: 35})
                     .expect(201)
                     .then(res => {
-                        // console.log(res.body.article, '<< res.body from test')
                         expect(res.body.article.votes).to.equal(35);
                     })
-            })
+            });
+            it('PATCH: status 404, article that does not exists', () => {
+                return request(app)
+                    .patch('/api/articles/99999999')
+                    .send({ inc_votes: 40})
+                    .expect(404)  
+            });
         })
     })
 })

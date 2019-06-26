@@ -12,5 +12,5 @@ exports.amendArticle = (req, res, next) => {
     const increment = req.body.inc_votes
     editArticle(article_id, increment).then(([article]) => {
         res.status(201).send({article})
-    })
+    }).catch(next)
 }

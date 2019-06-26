@@ -25,4 +25,12 @@ exports.editArticle = (article_id, increment) => {
         .where("articles.article_id", article_id)
         .increment("votes", increment)
         .returning('*')
+        .then(article => {
+            if(article.length === 0) {
+                return Promise.reject({
+                    status: 404,
+                    msg: "Article not found"
+                })
+            } else return article
+        })
 }
