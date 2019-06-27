@@ -117,6 +117,20 @@ describe('/', () => {
                     })
             })
         });
+        describe('GET /articles', () => {
+            it('GET status 200, respond with array of article objects',  () => {
+                return request(app)
+                    .get('/api/articles')
+                    .expect(200)
+                    .then(res => {
+                        expect(res.body.articles).to.be.an('array');
+                        expect(res.body.articles[0]).to.contain.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+                    })
+
+            })
+        })
+
+
         describe('PATCH /articles', () => {
             it('PATCH: status 201, respond with updated article', () => {
                 return request(app)

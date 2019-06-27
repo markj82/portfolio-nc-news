@@ -1,4 +1,4 @@
-const { fetchArticle, editArticle, addCommentToArticle, fetchComments } = require('../models/article-model')
+const { fetchArticle, editArticle, addCommentToArticle, fetchComments, fetchManyArticles } = require('../models/article-model')
 
 exports.sendArticle = (req, res, next) => {
     const article_id = req.params.article_id
@@ -30,4 +30,10 @@ exports.sendComment = (req, res, next) => {
     fetchComments(article_id, sort_by, order).then(comments => {
         res.status(200).send({comments})
     }).catch(next)
+}
+
+exports.sendManyArticles = (req, res, next) => {
+   fetchManyArticles().then(articles => {
+       res.status(200).send({articles})
+   })
 }

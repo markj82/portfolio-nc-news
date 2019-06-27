@@ -58,3 +58,13 @@ exports.fetchComments = (article_id, sort_by = 'created_at', order = 'desc') => 
         .where('comments.article_id', article_id)
         .orderBy(sort_by, order)
 }
+
+exports.fetchManyArticles = () => {
+    return connection
+        .select('articles.*')
+        .count({comment_count: "comment_id"})
+        .from('articles')
+        .leftJoin("comments", "comments.article_id", "articles.article_id")
+        .groupBy("articles.article_id")
+
+}
