@@ -1,4 +1,4 @@
-const { fetchArticle, editArticle, addCommentToArticle, fetchComment } = require('../models/article-model')
+const { fetchArticle, editArticle, addCommentToArticle, fetchComments } = require('../models/article-model')
 
 exports.sendArticle = (req, res, next) => {
     const article_id = req.params.article_id
@@ -26,7 +26,7 @@ exports.addComment = (req, res, next) => {
 
 exports.sendComment = (req, res, next) => {
     const article_id = req.params.article_id
-    fetchComment(article_id).then(comments => {
+    fetchComments(article_id).then(comments => {
         res.status(200).send({comments})
     })
 }
