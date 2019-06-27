@@ -4,6 +4,7 @@ const chai = require('chai');
 const { expect } = chai;
 const app = require('../app');
 const request = require('supertest');
+chai.use(require('chai-sorted'))
 
 describe('/', () => {
     after(() => connection.destroy())
@@ -64,8 +65,39 @@ describe('/', () => {
                         expect(res.body.comments[0]).to.contain.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
                         expect(res.body.comments[1]).to.contain.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
                     })
-
             });
+            it('GET status 200, responds with an array of comments, sorted default by created_at, default descending', () => {
+                return request(app)
+                    .get('/api/articles/1/comments?sort_by=created_at')
+                    .expect(200)
+                    .then(res => {
+                        expect(res.body.comments).to.be.descendingBy('created_at')
+                    })
+            });
+            it('GET status 200, responds with an array of comments, sorted default by created_at, ascending order', () => {
+                return request(app)
+                    .get('/api/articles/1/comments?order=asc')
+                    .expect(200)
+                    .then(res => {
+                        expect(res.body.comments).to.be.ascendingBy('created_at')
+                    })
+            })
+            it('GET status 200, responds with an array of comments, sorted by body, ascending order', () => {
+                return request(app)
+                    .get('/api/articles/1/comments?sort_by=body&order=asc')
+                    .expect(200)
+                    .then(res => {
+                        expect(res.body.comments).to.be.ascendingBy('body')
+                    })
+            })
+            it('GET status 200, responds with an array of comments, sorted by author, descending order', () => {
+                return request(app)
+                    .get('/api/articles/1/comments?sort_by=author')
+                    .expect(200)
+                    .then(res => {
+                        expect(res.body.comments).to.be.descendingBy('author')
+                    })
+            })
             it('GET status 404, when passing valid id, which is NOT in the database', () => {
                 return request(app)
                     .get('/api/articles/99999')

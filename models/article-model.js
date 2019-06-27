@@ -51,9 +51,10 @@ exports.addCommentToArticle = (article_id, username, commentBody) => {
         })
 }
 
-exports.fetchComments = article_id => {
+exports.fetchComments = (article_id, sort_by = 'created_at', order = 'desc') => {
     return connection
         .select('*')
         .from('comments')
         .where('comments.article_id', article_id)
+        .orderBy(sort_by, order)
 }
