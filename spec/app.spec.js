@@ -57,7 +57,7 @@ describe('/', () => {
             });
             it('GET status 200, responds with an array of comments', () => {
                 return request(app)
-                    .get('/api/articles/4/comments')
+                    .get('/api/articles/5/comments')
                     .expect(200)
                     .then(res => {
                         expect(res.body.comments).to.be.an('array')
@@ -65,7 +65,7 @@ describe('/', () => {
                         expect(res.body.comments[1]).to.contain.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
                     })
 
-            })
+            });
             it('GET status 404, when passing valid id, which is NOT in the database', () => {
                 return request(app)
                     .get('/api/articles/99999')

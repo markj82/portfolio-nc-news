@@ -25,7 +25,8 @@ exports.addComment = (req, res, next) => {
 }
 
 exports.sendComment = (req, res, next) => {
-    fetchComment().then(comments => {
+    const article_id = req.params.article_id
+    fetchComment(article_id).then(comments => {
         res.status(200).send({comments})
     })
 }

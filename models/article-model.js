@@ -51,8 +51,9 @@ exports.addCommentToArticle = (article_id, username, commentBody) => {
         })
 }
 
-exports.fetchComment = () => {
+exports.fetchComment = article_id => {
     return connection
         .select('*')
         .from('comments')
+        .where('comments.article_id', article_id)
 }
