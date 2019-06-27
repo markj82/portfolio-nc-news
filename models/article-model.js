@@ -59,12 +59,22 @@ exports.fetchComments = (article_id, sort_by = 'created_at', order = 'desc') => 
         .orderBy(sort_by, order)
 }
 
-exports.fetchManyArticles = () => {
+exports.fetchManyArticles = (sort_by = 'created_at', order = 'desc', author, topic) => {
     return connection
         .select('articles.*')
         .count({comment_count: "comment_id"})
         .from('articles')
         .leftJoin("comments", "comments.article_id", "articles.article_id")
         .groupBy("articles.article_id")
-
+        .orderBy(sort_by, order)
+        .modify(function(queryBuilder) {
+            if (author && topic) {
+                queryBuilder.where('articles.author', author)
+            } else if(author) {
+                queryBuilder.where('articles.author', author)
+            } else if(topic) {
+                queryBuilder.where('articles.topic', topic)
+            }
+        })
+        
 }

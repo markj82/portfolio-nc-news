@@ -33,7 +33,12 @@ exports.sendComment = (req, res, next) => {
 }
 
 exports.sendManyArticles = (req, res, next) => {
-   fetchManyArticles().then(articles => {
+    const { sort_by, order, author, topic } = req.query;
+    // console.log(sort_by)
+    // console.log(order)
+    // console.log(author)
+    // console.log(topic)
+   fetchManyArticles(sort_by, order, author, topic).then(articles => {
        res.status(200).send({articles})
    })
 }

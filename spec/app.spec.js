@@ -126,7 +126,30 @@ describe('/', () => {
                         expect(res.body.articles).to.be.an('array');
                         expect(res.body.articles[0]).to.contain.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
                     })
-
+            })
+            it('GET status 200, respond with array of article objects, accept queries sort by created_at-ascending, filtered by author', () => {
+                return request(app)
+                    .get('/api/articles?sort_by=created_at&order=asc&author=icellusedkars')
+                    .expect(200)
+                    .then(res => {
+                        expect(res.body.articles).to.be.an('array');
+                        expect(res.body.articles[0].author).to.equal('icellusedkars')
+                        expect(res.body.articles[1].author).to.equal('icellusedkars')
+                        expect(res.body.articles[2].author).to.equal('icellusedkars')
+                        expect(res.body.articles).to.be.ascendingBy('created_at')
+                    })
+            })
+            it('GET status 200, respond with array of article objects, accept queries sort by body-descending, filter by topic', () => {
+                return request(app)
+                    .get('/api/articles?sort_by=body&order=desc&topic=mitch')
+                    .expect(200)
+                    .then(res => {
+                        expect(res.body.articles).to.be.an('array');
+                        expect(res.body.articles[0].topic).to.equal('mitch')
+                        expect(res.body.articles[1].topic).to.equal('mitch')
+                        expect(res.body.articles[2].topic).to.equal('mitch')
+                        expect(res.body.articles).to.be.descendingBy('body')
+                    })
             })
         })
 
