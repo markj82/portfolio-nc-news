@@ -8,7 +8,8 @@ app.use('/api', apiRouter);
 
 app.use((err, req, res, next) => {
     const sqlErrorCodes = {
-        '22P02': 'Invalid article id'
+        '23502': 'No data provided!', 
+        '22P02': 'Invalid id'
     };
     if(sqlErrorCodes.hasOwnProperty(err.code)) {
         res.status(400).send({ msg: sqlErrorCodes[err.code]})

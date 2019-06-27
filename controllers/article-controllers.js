@@ -21,7 +21,7 @@ exports.addComment = (req, res, next) => {
     const commentBody = req.body.body
     addCommentToArticle(article_id, username, commentBody).then(comment => {
         res.status(201).send({comment})
-    })
+    }).catch(next)
 }
 
 exports.sendComment = (req, res, next) => {
@@ -29,5 +29,5 @@ exports.sendComment = (req, res, next) => {
     const {sort_by, order} = req.query
     fetchComments(article_id, sort_by, order).then(comments => {
         res.status(200).send({comments})
-    })
+    }).catch(next)
 }

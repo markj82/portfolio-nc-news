@@ -37,7 +37,7 @@ describe('/', () => {
                         expect(res.body.user).to.contain.keys('username', 'avatar_url', 'name');
                     })
             });
-            it('GET: status 404, invalid username, ?or 400 bad request?', () => {
+            it('GET: status 404, invalid username', () => {
                 return request(app)
                     .get('/api/users/wrong-username')
                     .expect(404)
@@ -98,6 +98,11 @@ describe('/', () => {
                         expect(res.body.comments).to.be.descendingBy('author')
                     })
             })
+            it('GET status 404, when query(sort) for column which does not exists', () => {
+                return request(app)
+                    .get('/api/articles/1/comments?sort_by=wrong_column')
+                    .expect(404)
+            });
             it('GET status 404, when passing valid id, which is NOT in the database', () => {
                 return request(app)
                     .get('/api/articles/99999')
@@ -108,7 +113,7 @@ describe('/', () => {
                     .get('/api/articles/not-a-valid-id')
                     .expect(400)
                     .then(({body}) => {
-                        expect(body.msg).to.equal('Invalid article id')
+                        expect(body.msg).to.equal('Invalid id')
                     })
             })
         });
@@ -134,7 +139,7 @@ describe('/', () => {
                     .send({ inc_votes: 35})
                     .expect(400)
                     .then(({body}) => {
-                        expect(body.msg).to.equal('Invalid article id')
+                        expect(body.msg).to.equal('Invalid id')
                     })
             })
         })
@@ -153,6 +158,16 @@ describe('/', () => {
                         expect(body.comment.author).to.equal('butter_bridge')
                         expect(body.comment.body).to.equal('This is really nice comment LOL')
                     })
+            })
+            it('POST: status 400, missing required fields', () => {
+                return request(app)
+                .post('/api/articles/4/comments')
+                .send({})
+                .expect(400)
+                .then(res => {
+                    expect(res.body.msg).to.equal('No data provided!');
+                })
+                
             })
         })
 
