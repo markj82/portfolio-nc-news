@@ -260,6 +260,12 @@ describe('/', () => {
             })
 
         })
-
+        describe('DELETE /comments', () => {
+            it('DELETE: status 204', () => {
+                return request(app)
+                    .delete('/api/comments/1')
+                    .expect(204)
+            })
+        })
     })
 })

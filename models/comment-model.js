@@ -9,3 +9,11 @@ exports.editComment = (comment_id, votes) => {
         .returning('*')
         .then(([comment]) => comment)
 }
+
+exports.deleteComment = comment_id => {
+    return connection
+        .select('*')
+        .from('comments')
+        .where('comments.comment_id', comment_id)
+        .delete()
+}
