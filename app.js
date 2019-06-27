@@ -6,6 +6,10 @@ app.use(express.json());
 
 app.use('/api', apiRouter);
 
+app.use('/*', (req, res ) => {
+    res.status(404).send({ msg: 'Page not found'})
+})
+
 app.use((err, req, res, next) => {
     const sqlErrorCodes = {
         '23502': 'No data provided!', 
