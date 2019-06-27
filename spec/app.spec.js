@@ -151,7 +151,7 @@ describe('/', () => {
                         expect(res.body.articles).to.be.descendingBy('body')
                     })
             })
-            // not happy path...
+            
             it('GET status 404, invalid route ie treated_at instead of created_at', () => {
                 return request(app)
                     .get('/api/articles?sort_by=treated_at&order=asc&author=icellusedkars')
@@ -230,6 +230,35 @@ describe('/', () => {
                 })
                 
             })
+        })
+
+        describe('PATCH /comments', () => {
+            it('PATCH: status 201, responds with updated comment', () => {
+                return request(app)
+                    .patch('/api/comments/2')
+                    .send({ inc_votes: 4})
+                    .expect(201)
+                    .then(({body}) => {
+                        expect(body.comments.votes).to.equal(18)
+                        expect(body.comments).to.contain.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
+                    })
+            });
+            it('PATCH: status 404, comment does not exists', () => {
+                return request(app)
+                    .patch('/api/comments/9999999999')
+                    .send({ inc_votes: 9})
+                    .expect(404)
+            });
+            it('PATCH: status 400, invalid type of comment id, i.e string', () => {
+                return request(app)
+                    .patch('/api/comments/not-a-valid-id')
+                    .send({ inc_votes: 9})
+                    .expect(400)
+                    .then(({body}) => {
+                        expect(body.msg).to.equal('Invalid id')
+                    })
+            })
+
         })
 
     })
