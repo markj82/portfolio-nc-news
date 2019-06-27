@@ -42,7 +42,7 @@ describe('/', () => {
                     .get('/api/users/wrong-username')
                     .expect(404)
                     .then(res => {
-                        expect(res.body.msg).to.equal('User not found');
+                        expect(res.body.msg).to.equal('Not found');
                     })
             })
         })
@@ -151,6 +151,30 @@ describe('/', () => {
                         expect(res.body.articles).to.be.descendingBy('body')
                     })
             })
+            // not happy path...
+            it('GET status 404, invalid route ie treated_at instead of created_at', () => {
+                return request(app)
+                    .get('/api/articles?sort_by=treated_at&order=asc&author=icellusedkars')
+                    .expect(404)
+            });
+            it('GET status 404, author does not exists', () => {
+                return request(app)
+                    .get('/api/articles?sort_by=created_at&order=asc&author=marek')
+                    .expect(404)
+                    .then(res => {
+                        // not to specific for an end user
+                        expect(res.body.msg).to.equal("Not found");  
+                    })
+            })
+            it('GET status 404, topic does not exists', () => {
+                return request(app)
+                    .get('/api/articles?sort_by=created_at&order=asc&author=icellusedkars&topic=ten_crazy_ice_cream')
+                    .expect(404)
+                    .then(res => {
+                        expect(res.body.msg).to.equal("Not found");  
+                    })
+            })
+
         })
 
 

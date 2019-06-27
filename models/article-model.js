@@ -69,12 +69,19 @@ exports.fetchManyArticles = (sort_by = 'created_at', order = 'desc', author, top
         .orderBy(sort_by, order)
         .modify(function(queryBuilder) {
             if (author && topic) {
-                queryBuilder.where('articles.author', author)
+                queryBuilder.where('articles.author', author).where('articles.topic', topic)
             } else if(author) {
                 queryBuilder.where('articles.author', author)
             } else if(topic) {
                 queryBuilder.where('articles.topic', topic)
             }
         })
-        
+        .then(article => {
+            if (article.length === 0) {
+                return Promise.reject({
+                    status: 404,
+                    msg: "Article not found"
+                })
+            } else return article
+        })
 }
