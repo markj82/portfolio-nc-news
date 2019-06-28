@@ -66,6 +66,15 @@ describe('/', () => {
                         expect(res.body.comments[1]).to.contain.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
                     })
             });
+            // work on this test after: deploy to heroku, create json, create readme
+            // it('GET status 404, when give a valid article id that does not exist', () => {
+            //     return request(app)
+            //         .get('/api/articles/1000/comments')
+            //         .expect(404)
+                    
+            // })
+
+
             it('GET status 200, responds with an array of comments, sorted default by created_at, default descending', () => {
                 return request(app)
                     .get('/api/articles/1/comments?sort_by=created_at')
@@ -204,6 +213,12 @@ describe('/', () => {
                     .then(({body}) => {
                         expect(body.msg).to.equal('Invalid id')
                     })
+            });
+            it('PATCH: status 400, article id does exist but trying to send empty body', () => {
+                return request(app)
+                    .patch('/api/articles/5')
+                    .send({})
+                    .expect(400)
             })
         })
         describe('POST /articles', () => {
@@ -279,5 +294,11 @@ describe('/', () => {
                     .expect(400)
             })
         })
+        // describe('GET /api', () => {
+        //     it('GET: status 200, responds with JSON describing all the available endpoints', () => {
+        //         return request(app)
+        //             .get('/api')
+        //     })
+        // })
     })
 })
