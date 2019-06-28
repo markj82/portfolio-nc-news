@@ -1,7 +1,7 @@
 
 exports.up = function(connection, Promise) {
   return connection.schema.createTable('users', function(usersTable) {
-      usersTable.string('username').primary().notNullable(); // ?
+      usersTable.string('username').primary().notNullable();
       usersTable.string('avatar_url');
       usersTable.string('name').notNullable();
   })
