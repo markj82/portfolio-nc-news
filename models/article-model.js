@@ -18,7 +18,7 @@ exports.fetchArticle = article_id => {
         })
     }
 
-exports.editArticle = (article_id, increment) => {
+exports.editArticle = (article_id, increment = 0) => {
     return connection
         .first('*')
         .from('articles')
@@ -57,6 +57,10 @@ exports.fetchComments = (article_id, sort_by = 'created_at', order = 'desc') => 
         .from('comments')
         .where('comments.article_id', article_id)
         .orderBy(sort_by, order)
+        .then(res => {
+            // console.log(res, 'res from article model')
+            return res;
+        })
 }
 
 exports.fetchManyArticles = (sort_by = 'created_at', order = 'desc', author, topic) => {
