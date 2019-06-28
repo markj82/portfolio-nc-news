@@ -42,7 +42,7 @@ describe('/', () => {
                     .get('/api/users/wrong-username')
                     .expect(404)
                     .then(res => {
-                        expect(res.body.msg).to.equal('Not found');
+                        expect(res.body.msg).to.equal('User not found');
                     })
             })
         })
@@ -98,10 +98,10 @@ describe('/', () => {
                         expect(res.body.comments).to.be.descendingBy('author')
                     })
             })
-            it('GET status 404, when query(sort) for column which does not exists', () => {
+            it('GET status 400, when query(sort) for column which does not exists', () => {
                 return request(app)
                     .get('/api/articles/1/comments?sort_by=wrong_column')
-                    .expect(404)
+                    .expect(400)
             });
             it('GET status 404, when passing valid id, which is NOT in the database', () => {
                 return request(app)
@@ -152,10 +152,12 @@ describe('/', () => {
                     })
             })
             
-            it('GET status 404, invalid route ie treated_at instead of created_at', () => {
+            it('GET status 400, invalid route ie treated_at instead of created_at', () => {
                 return request(app)
-                    .get('/api/articles?sort_by=treated_at&order=asc&author=icellusedkars')
-                    .expect(404)
+                    .get('/api/articles?sort_by=treated_at')
+                    .expect(400).then(res => {
+                        expect(res.body.msg).to.equal('invalid sort_by query')
+                    })
             });
             it('GET status 404, author does not exists', () => {
                 return request(app)
@@ -163,7 +165,7 @@ describe('/', () => {
                     .expect(404)
                     .then(res => {
                         // not to specific for an end user
-                        expect(res.body.msg).to.equal("Not found");  
+                        expect(res.body.msg).to.equal("Article not found");  
                     })
             })
             it('GET status 404, topic does not exists', () => {
@@ -171,7 +173,7 @@ describe('/', () => {
                     .get('/api/articles?sort_by=created_at&order=asc&author=icellusedkars&topic=ten_crazy_ice_cream')
                     .expect(404)
                     .then(res => {
-                        expect(res.body.msg).to.equal("Not found");  
+                        expect(res.body.msg).to.equal("Article not found");  
                     })
             })
 
@@ -179,18 +181,18 @@ describe('/', () => {
 
 
         describe('PATCH /articles', () => {
-            it('PATCH: status 201, respond with updated article', () => {
+            it('PATCH: status 200, respond with updated article', () => {
                 return request(app)
                     .patch('/api/articles/5')
                     .send({ inc_votes: 35})
-                    .expect(201)
+                    .expect(200)
                     .then(res => {
                         expect(res.body.article.votes).to.equal(35);
                     })
             });
             it('PATCH: status 404, article that does not exists', () => {
                 return request(app)
-                    .patch('/api/articles/99999999')
+                    .patch('/api/articles/9999')
                     .send({ inc_votes: 40})
                     .expect(404)  
             });
@@ -226,18 +228,18 @@ describe('/', () => {
                 .send({})
                 .expect(400)
                 .then(res => {
-                    expect(res.body.msg).to.equal('No data provided!');
+                    expect(res.body.msg).to.equal('Missing Required Information');
                 })
                 
             })
         })
 
         describe('PATCH /comments', () => {
-            it('PATCH: status 201, responds with updated comment', () => {
+            it('PATCH: status 200, responds with updated comment', () => {
                 return request(app)
                     .patch('/api/comments/2')
                     .send({ inc_votes: 4})
-                    .expect(201)
+                    .expect(200)
                     .then(({body}) => {
                         expect(body.comments.votes).to.equal(18)
                         expect(body.comments).to.contain.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
@@ -245,7 +247,7 @@ describe('/', () => {
             });
             it('PATCH: status 404, comment does not exists', () => {
                 return request(app)
-                    .patch('/api/comments/9999999999')
+                    .patch('/api/comments/9999')
                     .send({ inc_votes: 9})
                     .expect(404)
             });
@@ -265,6 +267,16 @@ describe('/', () => {
                 return request(app)
                     .delete('/api/comments/1')
                     .expect(204)
+            });
+            it('DELETE: status 404, trying to delete comment which does not exists', () => {
+                return request(app)
+                    .delete('/api/comments/9999')
+                    .expect(404)
+            });
+            it('DELETE: status 400, invalid type of comment it, ie string', () => {
+                return request(app)
+                    .delete('/api/comments/not-a-valid-id')
+                    .expect(400)
             })
         })
     })
