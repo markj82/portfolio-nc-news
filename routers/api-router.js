@@ -7,7 +7,10 @@ const userRouter = require('./user-router')
 const articleRouter = require('./article-router')
 const commentRouter = require('./comment-router')
 
+const jsonEndpoints = require('../endpoints.json')
+
 apiRouter.route('/')
+    .get((req, res) => res.status(200).send(jsonEndpoints))
     .all(handleMethodErrors)
 
 apiRouter.use('/topics', topicRouter)
