@@ -260,6 +260,16 @@ describe('/', () => {
                         expect(body.comments).to.contain.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
                     })
             });
+            it('PATCH: status 200, when sent a body with no `inc_votes` property, but with valid id', () => {
+                return request(app)
+                    .patch('/api/comments/1')
+                    .send({})
+                    .expect(200)
+                    .then(({body}) => {
+                        expect(body.comments.comment_id).to.be.equal(1)
+                        expect(body.comments.votes).to.be.equal(17)
+                    })
+            })
             it('PATCH: status 404, comment does not exists', () => {
                 return request(app)
                     .patch('/api/comments/9999')
@@ -274,7 +284,7 @@ describe('/', () => {
                     .then(({body}) => {
                         expect(body.msg).to.equal('Invalid id')
                     })
-            })
+            });
 
         })
         describe('DELETE /comments', () => {
