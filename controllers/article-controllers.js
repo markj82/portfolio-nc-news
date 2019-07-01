@@ -1,4 +1,5 @@
 const { fetchArticle, editArticle, addCommentToArticle, fetchComments, fetchManyArticles } = require('../models/article-model')
+const { checkExists } = require('../models/util-model')
 
 exports.sendArticle = (req, res, next) => {
     const article_id = req.params.article_id
@@ -33,13 +34,16 @@ exports.addComment = (req, res, next) => {
 exports.sendComment = (req, res, next) => {
     const article_id = req.params.article_id
     const {sort_by, order} = req.query
-    // console.log(article_id, 'article id from contrller')
     fetchComments(article_id, sort_by, order).then(comments => {
-        // if (comments.length === 0) {
-
-        // }
-        res.status(200).send({comments})
-    }).catch(next)
+        const commentExists = article_id ? checkExists(article_id, 'articles', 'article_id') : null;
+        return Promise.all([commentExists, comments]);
+    })
+    .then(([commentExists, comments]) => {
+        if(commentExists === false) {
+            return Promise.reject({ status: 404, msg: "comment not found"})
+        } else res.status(200).send({comments})
+    })
+    .catch(next)
 }
 
 exports.sendManyArticles = (req, res, next) => {
