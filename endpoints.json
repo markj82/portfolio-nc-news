@@ -1,28 +1,150 @@
 {
   "GET /api": {
-    "description": "serves up a json representation of all the available endpoints of the api",
-    "THIS IS TEST FILE": "Valid json to be seen soon"
+    "description": "serves up a json representation of all the available endpoints of the api"
+  },
+  "GET /api/users/:username": {
+    "description": "serves an object with information about the user",
+    "example_response": {
+      "user": {
+        "username": "tickle122",
+        "avatar_url": "https://www.spiritsurfers.net/monastery/wp-content/uploads/_41500270_mrtickle.jpg",
+        "name": "Tom Tickle"
+      }
+    }
   },
   "GET /api/topics": {
     "description": "serves an array of all topics",
     "queries": [],
-    "exampleResponse": {
+    "example_response": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all topics",
+    "description": "serves an array of all articles",
     "queries": ["author", "topic", "sort_by", "order"],
-    "exampleResponse": {
+    "queryRules": {
+      "author": "filter by username",
+      "topic": "filter by topic",
+      "sort_by": "Sort returning articles by relevent column",
+      "sort_byColumns": ["article_id", "title", "body", "votes", "topic", "author", "created_At", "comment_count"],
+      "order": "sorting in ascending or descending order",
+      "orderOptions": ["dasc", "asc"]
+    },
+    "example_response": {
       "articles": [
         {
-          "title": "Seafood substitutions are increasing",
-          "topic": "cooking",
-          "author": "weegembump",
-          "body": "Text from the article..",
-          "created_at": 1527695953341
-        }
+          "article_id": 4,
+          "title": "Making sense of Redux",
+          "body": "When I first started learning React, I remember reading lots of articles about the different technologies associated with it. In particular, this one article stood out. It mentions how confusing the ecosystem is, and how developers often feel they have to know ALL of the ecosystem before using React. And as someone who’s used React daily for the past 8 months or so, I can definitely say that I’m still barely scratching the surface in terms of understanding how the entire ecosystem works! But my time spent using React has given me some insight into when and why it might be appropriate to use another technology — Redux (a variant of the Flux architecture).",
+          "votes": 0,
+          "topic": "coding",
+          "author": "jessjelly",
+          "created_at": "2017-12-24T05:38:51.240Z",
+          "comment_count": "9"
+          },
+          {
+          "article_id": 11,
+          "title": "Designing Better JavaScript APIs",
+          "body": "At some point or another, you will find yourself writing JavaScript code that exceeds the couple of lines from a jQuery plugin. Your code will do a whole lot of things; it will (ideally) be used by many people who will approach your code differently. They have different needs, knowledge and expectations.",
+          "votes": 0,
+          "topic": "coding",
+          "author": "tickle122",
+          "created_at": "2017-11-10T16:41:01.780Z",
+          "comment_count": "5"
+          }
       ]
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an object based on aricle id",
+    "example_response": {
+      "article": {
+        "article_id": 3,
+        "title": "22 Amazing open source React projects",
+        "body": "This is a collection of open source apps built with React.JS library. In this observation, we compared nearly 800 projects to pick the top 22. (React Native: 11, React: 11). To evaluate the quality, Mybridge AI considered a variety of factors to determine how useful the projects are for programmers. To give you an idea on the quality, the average number of Github stars from the 22 projects was 1,681.",
+        "votes": 0,
+        "topic": "coding",
+        "author": "happyamy2016",
+        "created_at": "2017-07-21T17:54:10.346Z",
+        "comment_count": "10"
+        }
+    }
+  },
+  "PATCH /api/articles/:article:id": {
+    "description": "serves an object with updated article based on send bodyy",
+    "example_body": {
+      "inc_votes": 17
+    },
+    "example_response": {
+      "article": {
+        "article_id": 13,
+        "title": "What does Jose Mourinho's handwriting say about his personality?",
+        "topic": "football",
+        "author": "weegembump",
+        "body": "Jose Mourinho was at The O2 on Sunday night to watch Dominic Thiem in action against Novak Djokovic. Thiem took the first set before Djokovic fought back to claim the victory, but Manchester United's manager was clearly impressed with the Austrian's performance.",
+        "created_at": "2018-04-16T19:29:32.774Z",
+        "votes": 17,
+        "comment_count": "6"
+      }
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "serves an object with the newly added comment",
+    "example_body": {
+      "username": "butter_bridge",
+      "body": "This is really nice comment LOL"
+    },
+    "example_response": {
+      "comment_id": 19,
+      "author": "butter_bridge",
+      "article_id": 4,
+      "votes": 0,
+      "created_at": "2019-07-01T05:46:47.358Z",
+      "body": "This is really nice comment LOL" 
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves an array containing comments for article provided",
+    "example_response": [
+      {
+        "comment_id": 3,
+        "author": "grumpy19",
+        "article_id": 3,
+        "votes": 3,
+        "created_at": "2017-08-31T12:51:40.263Z",
+        "body": "Qui sunt sit voluptas repellendus sed. Voluptatem et repellat fugiat. Rerum doloribus eveniet quidem vero aut sint officiis. Dolor facere et et architecto vero qui et perferendis dolorem. Magni quis ratione adipisci error assumenda ut. Id rerum eos facere sit nihil ipsam officia aspernatur odio."
+        },
+        {
+        "comment_id": 167,
+        "author": "grumpy19",
+        "article_id": 3,
+        "votes": 19,
+        "created_at": "2017-06-25T04:40:26.046Z",
+        "body": "Deleniti itaque et est unde autem. Labore illo commodi quaerat natus fugiat adipisci. Adipisci unde recusandae aliquam suscipit ipsum."
+        }
+    ]
+  },
+  "PATCH /api/comments/:comment_id": {
+    "description": "serves an object with updated comment",
+    "example_body": {
+      "inc_votes": 4
+    },
+    "example_response": {
+      "comment": {
+        "comment_id": 2,
+        "author": "butter_bridge",
+        "article_id": 1,
+        "votes": 18,
+        "created_at": "2016-11-22T12:36:03.389Z",
+        "body":
+         "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky."
+        }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "delete a comments with provided id and responds with a status 204",
+    "example_response": {
+      "status": "204"
     }
   }
 }
