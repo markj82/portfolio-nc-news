@@ -4,6 +4,7 @@ const chai = require('chai');
 const { expect } = chai;
 const app = require('../app');
 const request = require('supertest');
+const jsonEndpoints = require('../endpoints.json')
 chai.use(require('chai-sorted'))
 
 describe('/', () => {
@@ -66,15 +67,15 @@ describe('/', () => {
                         expect(res.body.comments[1]).to.contain.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
                     })
             });
-            // work on this test after: deploy to heroku, create json, create readme
-            // it('GET status 404, when give a valid article id that does not exist', () => {
-            //     return request(app)
-            //         .get('/api/articles/1000/comments')
-            //         .expect(404)
+            it('GET status 404, when give a valid article id that does not exist', () => {
+                return request(app)
+                    .get('/api/articles/999/comments')
+                    .expect(404)
+                    .then(({body}) => {
+                        expect(body.msg).to.equal('comment not found')
+                    })
                     
-            // })
-
-
+            })
             it('GET status 200, responds with an array of comments, sorted default by created_at, default descending', () => {
                 return request(app)
                     .get('/api/articles/1/comments?sort_by=created_at')
@@ -173,7 +174,6 @@ describe('/', () => {
                     .get('/api/articles?sort_by=created_at&order=asc&author=marek')
                     .expect(404)
                     .then(res => {
-                        // not to specific for an end user
                         expect(res.body.msg).to.equal("Article not found");  
                     })
             })
@@ -294,11 +294,16 @@ describe('/', () => {
                     .expect(400)
             })
         })
-        // describe('GET /api', () => {
-        //     it('GET: status 200, responds with JSON describing all the available endpoints', () => {
-        //         return request(app)
-        //             .get('/api')
-        //     })
-        // })
+        describe('GET /api', () => {
+            it('GET: status 200, responds with JSON describing all the available endpoints', () => {
+                return request(app)
+                    .get('/api')
+                    .send(jsonEndpoints)
+                    .expect(200)
+                    .then(({body}) => {
+                        expect(body['GET /api/topics']).to.contain.keys('description', 'queries', 'example_response');
+                    })
+            })
+        })
     })
 })
