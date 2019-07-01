@@ -58,7 +58,6 @@ exports.fetchComments = (article_id, sort_by = 'created_at', order = 'desc') => 
         .where('comments.article_id', article_id)
         .orderBy(sort_by, order)
         .then(res => {
-            // console.log(res, 'res from article model')
             return res;
         })
 }
