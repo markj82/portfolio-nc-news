@@ -2,15 +2,15 @@ const { fetchArticle, editArticle, addCommentToArticle, fetchComments, fetchMany
 const { checkExists } = require('../models/util-model')
 
 exports.sendArticle = (req, res, next) => {
-    const article_id = req.params.article_id
+    const {article_id} = req.params;
     fetchArticle(article_id).then(article => {
         res.status(200).send({article})
     }).catch(next)
 }
 
 exports.amendArticle = (req, res, next) => {
-    const article_id = req.params.article_id
-    const increment = req.body.inc_votes
+    const {article_id} = req.params;
+    const {inc_votes : increment} = req.body
     editArticle(article_id, increment).then(([article]) => {
         if(!increment) {
             return Promise.reject({
@@ -23,16 +23,16 @@ exports.amendArticle = (req, res, next) => {
 }
 
 exports.addComment = (req, res, next) => {
-    const article_id = req.params.article_id
-    const username = req.body.username
-    const commentBody = req.body.body
+    const {article_id} = req.params;
+    const {username} = req.body
+    const {body : commentBody} = req.body
     addCommentToArticle(article_id, username, commentBody).then(comment => {
         res.status(201).send({comment})
     }).catch(next)
 }
 
 exports.sendComment = (req, res, next) => {
-    const article_id = req.params.article_id
+    const {article_id} = req.params;
     const {sort_by, order} = req.query
     fetchComments(article_id, sort_by, order).then(comments => {
         const commentExists = article_id ? checkExists(article_id, 'articles', 'article_id') : null;
