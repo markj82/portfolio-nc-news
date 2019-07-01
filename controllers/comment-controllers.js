@@ -17,7 +17,6 @@ exports.amendComment = (req, res, next) => {
 exports.removeComment = (req, res, next) => {
     const comment_id = req.params.comment_id
     deleteComment(comment_id).then(comment => {
-        // if comment_id does not exists in database, then comment is 0
         if (comment === 0) {
             return Promise.reject({
                 status: 404,
